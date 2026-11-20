@@ -22,11 +22,49 @@ logic_gates.v	Logic-gate RTL
 logic_gates_tb.v	All input combinations and VCD generation
  # Verilog  Program
 
-# **Test Bench Program**
+verilog
+// gedit basic_gates.v
+module basic_gates (
+input wire a,
+input wire b,
+output wire y_and,
+output wire y_or,
+output wire y_not
+);
+assign y_and = a &amp; b; // AND gate
+assign y_or = a | b; // OR gate
+assign y_not = ~a; // NOT gate (inverter)
+endmodule
 
+# Test Bench Program
 
+module tb2;
+reg a, b;
+wire y_and, y_or, y_not;
+// Instantiate the design under test (DUT)
+basic_gates uut (
+.a(a),
 
-
+.b(b),
+.y_and(y_and),
+.y_or(y_or),
+.y_not(y_not)
+);
+initial begin
+// ---- VCD dump setup ----
+$dumpfile(&quot;basic_gates.vcd&quot;); // name of the VCD file to be generated
+$dumpvars(0, tb2); // dump all signals in this testbench hierarchy
+// ---- Apply all 4 input combinations ----
+$monitor(&quot;Time=%0t a=%b b=%b | AND=%b OR=%b NOT(a)=%b&quot;, $time, a, b, y_and, y_or,
+y_not);
+a = 0; b = 0; #10;
+a = 0; b = 1; #10;
+a = 1; b = 0; #10;
+a = 1; b = 1; #10;
+#10 $finish;
+#10;
+end
+endmodule
  
 <img width="940" height="318" alt="image" src="https://github.com/user-attachments/assets/8a343bdb-ffb4-4aac-8b88-cf59eca374a8" />
 
@@ -79,26 +117,7 @@ The design was compiled and simulated using Synopsys VCS, and the functionality 
 Output
 # OUTPUT
 
+<img width="1592" height="873" alt="WhatsApp Image 2026-11-20 at 6 51 57 AM" src="https://github.com/user-attachments/assets/e59a5083-0245-451d-a313-b35664581d77" />
+
 
  
-# Viva-Voce Questions
-
-•	What is a logic gate?
-
-•	What are the basic logic gates in digital electronics?
-
-•	What is the Boolean expression for an AND gate? An OR gate? A NOT gate?
-
-•	Why is the NOT gate also called an inverter?
-
-•	What is a universal gate, and how can NAND/NOR realize AND, OR, and NOT?
-
-•	What is the purpose of a Verilog testbench?
-
-•	Why is a VCD file generated?
-
-•	What is the purpose of ./simv?
-•	What is the purpose of DVE?
-•	What is the difference between simulation and synthesis?
-•	What is the difference between $dumpfile and $dumpvars?
-
